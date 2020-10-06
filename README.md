@@ -1,2 +1,2 @@
-# concentradora-servicios-scheduled
-Servicios programados de concentradora
+# concentradora
+Primer versión de la concentradora de operaciones
