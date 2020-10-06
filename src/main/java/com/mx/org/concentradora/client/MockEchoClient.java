@@ -14,15 +14,6 @@ public class MockEchoClient {
 	private PrintWriter out;
 	private BufferedReader in;
 
-	public static void main(String[] args) {
-		System.out.println("Inciando cliente");
-		MockEchoClient client = new MockEchoClient();
-		client.startConnection("192.168.1.82", 9898);
-		String response = client.sendMessage(GeneradorPeticionesMock.generarPeticionEcho());
-		System.out.println("La respuesta a la solicitud de echo fue: " + response);
-		client.stopConnection();
-	}
-
 	public void startConnection(String ip, int port) {
 		try {
 			System.out.println("abriendo cleinte con: " + ip + ":" + port);

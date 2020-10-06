@@ -12,7 +12,7 @@ public class GeneradorPeticionesMock {
 	private static int contador = 0;
 	private static Date fechaActual = new Date();
 
-	public static String generarPeticionEcho() {
+	public String generarPeticionEcho() {
 		contador++;
 		StringBuilder peticion = new StringBuilder();
 		peticion.append("STX");

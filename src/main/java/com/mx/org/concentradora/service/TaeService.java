@@ -6,6 +6,8 @@ import com.mx.org.concentradora.model.TransaccionOut;
 
 public interface TaeService {
 
-	public abstract String[] taeTelcel(TransaccionOut transaccion) throws UnknownHostException;
+	public abstract String[] enviaSolicitud(TransaccionOut transaccion) throws UnknownHostException;
+	
+	public abstract String[] enviaEcho() throws UnknownHostException;
 
 }
