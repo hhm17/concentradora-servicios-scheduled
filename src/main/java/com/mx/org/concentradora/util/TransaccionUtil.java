@@ -3,6 +3,7 @@ package com.mx.org.concentradora.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.mx.org.concentradora.model.Bitacora;
 import com.mx.org.concentradora.model.TransaccionIn;
 import com.mx.org.concentradora.model.TransaccionOut;
 
@@ -38,7 +39,26 @@ public class TransaccionUtil {
 		transaccionSalida.setReferencia(transaccionEntrada.getReferencia());
 		transaccionSalida.setTclave(transaccionEntrada.getTclave());
 		transaccionSalida.setUserId(transaccionEntrada.getUserId());
+		transaccionSalida.setFolio(String.valueOf(transaccionEntrada.getId()));
 		return transaccionSalida;
+	}
+	
+	public static Bitacora crearBitacora(TransaccionIn transaccionEntrada) {
+		Bitacora bitacora = new Bitacora();
+		bitacora.setCaja(transaccionEntrada.getCaja());
+		bitacora.setEstatus(transaccionEntrada.getEstatus());
+		bitacora.setIcb(transaccionEntrada.getIcb());
+		bitacora.setIclave(transaccionEntrada.getIclave());
+		bitacora.setId(transaccionEntrada.getId());
+		bitacora.setIdTicket(transaccionEntrada.getIdTicket());
+		bitacora.setIdTurno(transaccionEntrada.getIdTurno());
+		bitacora.setMonto(transaccionEntrada.getMonto());
+		bitacora.setPclave(transaccionEntrada.getPclave());
+		bitacora.setReferencia(transaccionEntrada.getReferencia());
+		bitacora.setTclave(transaccionEntrada.getTclave());
+		bitacora.setUserId(transaccionEntrada.getUserId());
+		bitacora.setFolio(String.valueOf(transaccionEntrada.getId()));
+		return bitacora;
 	}
 
 	public static String generarCadenaFecha() {

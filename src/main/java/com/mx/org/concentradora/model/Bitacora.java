@@ -12,7 +12,6 @@ public class Bitacora {
 	private int iclave;
 	private int pclave;
 	private String icb;
-	private Date fecha;
 	private int estatus;
 	private int userId;
 	private Double monto;
@@ -25,8 +24,8 @@ public class Bitacora {
 	private Date fechaFin;
 
 	public Bitacora(Long id, String tclave, String caja, int idTurno, int idTicket, int iclave, int pclave, String icb,
-			Date fecha, int estatus, int userId, Double monto, String referencia, String folio, String folioProv,
-			String respProv, Date fechaInicio, Date fechaActualizacion, Date fechaFin) {
+			int estatus, int userId, Double monto, String referencia, String folio, String folioProv, String respProv,
+			Date fechaInicio, Date fechaActualizacion, Date fechaFin) {
 		super();
 		this.id = id;
 		this.tclave = tclave;
@@ -36,7 +35,6 @@ public class Bitacora {
 		this.iclave = iclave;
 		this.pclave = pclave;
 		this.icb = icb;
-		this.fecha = fecha;
 		this.estatus = estatus;
 		this.userId = userId;
 		this.monto = monto;
@@ -115,14 +113,6 @@ public class Bitacora {
 
 	public void setIcb(String icb) {
 		this.icb = icb;
-	}
-
-	public Date getFecha() {
-		return fecha;
-	}
-
-	public void setFecha(Date fecha) {
-		this.fecha = fecha;
 	}
 
 	public int getEstatus() {
