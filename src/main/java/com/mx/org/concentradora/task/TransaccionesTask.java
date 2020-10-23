@@ -41,10 +41,10 @@ public class TransaccionesTask {
 	@Qualifier("taeService")
 	private TaeService taeService;
 
-	@Scheduled(cron = "0 */10 * ? * *")
+	@Scheduled(cron = "0 */1 * ? * *")
 	public void procesarTransacciones() {
 		try {
-			enviaEcho();
+//			enviaEcho();
 
 			CollectionModel<TransaccionIn> transaccionesNuevas = transaccionInFeignClient
 					.findByEstatus(TRANSACCION_NUEVA);
@@ -63,11 +63,11 @@ public class TransaccionesTask {
 					bitacora.setFechaActualizacion(new Date());
 					bitacora = bitacoraFeignClient.update(bitacora, bitacora.getId());
 
-					String[] respuestaSocket = taeService.enviaSolicitud(transaccionOut);
+//					String[] respuestaSocket = taeService.enviaSolicitud(transaccionOut);
 					transaccionOut.setEstatus(TRANSACCION_RESUELTA);
-					transaccionOut.setRespProv(respuestaSocket[0]);
-					transaccionOut.setFolioProv(respuestaSocket[1]);
-					transaccionOut.setCanalVenta(respuestaSocket[2]);
+					transaccionOut.setRespProv("XXXXXX");
+					transaccionOut.setFolioProv("XXXXXX");
+					transaccionOut.setCanalVenta("XXXXXX");
 					transaccionOut.setFechaResp(new Date());
 
 					transaccionOutFeignClient.update(transaccionOut, transaccionIn.getId());
@@ -76,12 +76,12 @@ public class TransaccionesTask {
 					bitacora.setEstatus(BITACORA_TRANSACCION_PROCESADA);
 					bitacora.setFechaActualizacion(new Date());
 					bitacora.setFechaFin(new Date());
-					bitacora.setRespProv(respuestaSocket[0]);
-					bitacora.setFolioProv(respuestaSocket[1]);
+					bitacora.setRespProv("XXXXXX");
+					bitacora.setFolioProv("XXXXXX");
 					bitacora = bitacoraFeignClient.update(bitacora, bitacora.getId());
 				}
 			}
-		} catch (UnknownHostException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

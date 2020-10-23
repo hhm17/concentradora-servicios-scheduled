@@ -1,6 +1,5 @@
 package com.mx.org.concentradora.service.impl;
 
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +22,8 @@ public class TaeServiceImpl implements TaeService {
 
 	public String[] enviaSolicitud(TransaccionOut transaccion) throws UnknownHostException {
 		String ip = null;
-		ip = InetAddress.getLocalHost().getHostAddress();
-//		ip = "23.99.193.253";
+//		ip = InetAddress.getLocalHost().getHostAddress();
+		ip = "23.99.193.253";
 		saldo.startConnection(ip, 9898);
 		String respuetaSocket = saldo
 				.sendMessage(mock.generarPeticionSolicitudSaldo(transaccion.getTclave(), transaccion.getCaja(),
