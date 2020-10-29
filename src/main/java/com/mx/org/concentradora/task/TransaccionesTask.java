@@ -24,6 +24,7 @@ public class TransaccionesTask {
 	private Integer TRANSACCION_NUEVA = 1;
 	private Integer TRANSACCION_ENVIADA = 2;
 	private Integer TRANSACCION_RESUELTA = 3;
+	private static int intentosEcho = 0;
 
 	private Integer BITACORA_TRANSACCION_ENVIADA = 2;
 	private Integer BITACORA_TRANSACCION_PROCESADA = 3;
@@ -41,14 +42,16 @@ public class TransaccionesTask {
 	@Qualifier("taeService")
 	private TaeService taeService;
 
-	@Scheduled(cron = "0 */1 * ? * *")
+	@Scheduled(cron = "*/10 * * ? * *")
 	public void procesarTransacciones() {
 		try {
-//			enviaEcho();
-
+			if (intentosEcho == 0) {
+				enviaEcho();
+			}
 			CollectionModel<TransaccionIn> transaccionesNuevas = transaccionInFeignClient
 					.findByEstatus(TRANSACCION_NUEVA);
-			if (transaccionesNuevas != null) {
+			if (transaccionesNuevas != null && !transaccionesNuevas.getContent().isEmpty()) {
+				intentosEcho = 0;
 				for (TransaccionIn transaccionIn : transaccionesNuevas.getContent()) {
 					TransaccionOut transaccionOut = TransaccionUtil.convertirTransaccionOut(transaccionIn);
 					transaccionOut.setEstatus(TRANSACCION_ENVIADA);
@@ -63,11 +66,11 @@ public class TransaccionesTask {
 					bitacora.setFechaActualizacion(new Date());
 					bitacora = bitacoraFeignClient.update(bitacora, bitacora.getId());
 
-//					String[] respuestaSocket = taeService.enviaSolicitud(transaccionOut);
+					String[] respuestaSocket = taeService.enviaSolicitud(transaccionOut);
 					transaccionOut.setEstatus(TRANSACCION_RESUELTA);
-					transaccionOut.setRespProv("XXXXXX");
-					transaccionOut.setFolioProv("XXXXXX");
-					transaccionOut.setCanalVenta("XXXXXX");
+					transaccionOut.setRespProv(respuestaSocket[0]);
+					transaccionOut.setFolioProv(respuestaSocket[1]);
+					transaccionOut.setCanalVenta(respuestaSocket[2]);
 					transaccionOut.setFechaResp(new Date());
 
 					transaccionOutFeignClient.update(transaccionOut, transaccionIn.getId());
@@ -76,10 +79,18 @@ public class TransaccionesTask {
 					bitacora.setEstatus(BITACORA_TRANSACCION_PROCESADA);
 					bitacora.setFechaActualizacion(new Date());
 					bitacora.setFechaFin(new Date());
-					bitacora.setRespProv("XXXXXX");
-					bitacora.setFolioProv("XXXXXX");
+					bitacora.setRespProv(respuestaSocket[0]);
+					bitacora.setFolioProv(respuestaSocket[1]);
 					bitacora = bitacoraFeignClient.update(bitacora, bitacora.getId());
 				}
+			} else {
+				intentosEcho++;
+			}
+
+			System.out.println("se imprime el contador: " + intentosEcho);
+			if (intentosEcho == 20) {
+				intentosEcho = 0;
+				enviaEcho();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
