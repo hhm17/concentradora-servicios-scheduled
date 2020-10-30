@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.mx.org.concentradora.client.GeneradorPeticionesMock;
 import com.mx.org.concentradora.client.MockSolicitudSaldoClient;
-import com.mx.org.concentradora.model.TransaccionOut;
+import com.mx.org.concentradora.model.TransaccionIn;
 import com.mx.org.concentradora.service.TaeService;
 import com.mx.org.concentradora.util.TransaccionUtil;
 
@@ -21,13 +21,20 @@ public class TaeServiceImpl implements TaeService {
 	@Autowired
 	MockSolicitudSaldoClient saldo;
 
-	public String[] enviaSolicitud(TransaccionOut transaccion) throws UnknownHostException {
+	public String[] enviaSolicitud(TransaccionIn transaccion) throws UnknownHostException {
 		String ip = null;
 		ip = InetAddress.getLocalHost().getHostAddress();
 		saldo.startConnection(ip, 9898);
-		String respuetaSocket = saldo
-				.sendMessage(mock.generarPeticionSolicitudSaldo(transaccion.getTclave(), transaccion.getCaja(),
-						transaccion.getReferencia(), TransaccionUtil.transformarMontoCadena(transaccion.getMonto())));
+
+		String accion = "01";
+
+		if (transaccion.getProducto() != null && !transaccion.getProducto().isEmpty()) {
+			accion = "21";
+		}
+
+		String respuetaSocket = saldo.sendMessage(mock.generarPeticionSolicitudSaldo(transaccion.getTclave(),
+				transaccion.getCaja(), transaccion.getReferencia(),
+				TransaccionUtil.transformarMontoCadena(transaccion.getMonto()), accion, transaccion.getProducto()));
 		saldo.stopConnection();
 		String[] respuestaProcesada = TransaccionUtil.procesarRespuestaSocket(respuetaSocket);
 		return respuestaProcesada;

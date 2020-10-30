@@ -15,14 +15,14 @@ import com.mx.org.concentradora.model.TransaccionIn;
 public interface TransaccionInFeignClient {
 
 	@GetMapping("/transacciones-entrada/search/buscar-folio")
-	public TransaccionIn findByFolio(@RequestParam("folio") String folio);
+	public TransaccionIn findByFolio(@RequestParam(value = "folio") String folio);
 
 	@GetMapping("/transacciones-entrada/search/buscar-estatus")
-	public CollectionModel<TransaccionIn> findByEstatus(@RequestParam("estatus") Integer estatus);
+	public CollectionModel<TransaccionIn> findByEstatus(@RequestParam(value = "estatus") Integer estatus);
 
 	@PostMapping("/transacciones-entrada/")
 	public TransaccionIn save(@RequestBody TransaccionIn transaccion);
 	
 	@PutMapping("/transacciones-entrada/{id}")
-	public TransaccionIn update(@RequestBody TransaccionIn transaccion, @PathVariable Long id);
+	public TransaccionIn update(@RequestBody TransaccionIn transaccion, @PathVariable(value = "id") Long id);
 }

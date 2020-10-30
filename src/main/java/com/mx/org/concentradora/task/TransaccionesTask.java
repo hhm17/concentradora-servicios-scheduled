@@ -66,7 +66,7 @@ public class TransaccionesTask {
 					bitacora.setFechaActualizacion(new Date());
 					bitacora = bitacoraFeignClient.update(bitacora, bitacora.getId());
 
-					String[] respuestaSocket = taeService.enviaSolicitud(transaccionOut);
+					String[] respuestaSocket = taeService.enviaSolicitud(transaccionIn);
 					transaccionOut.setEstatus(TRANSACCION_RESUELTA);
 					transaccionOut.setRespProv(respuestaSocket[0]);
 					transaccionOut.setFolioProv(respuestaSocket[1]);

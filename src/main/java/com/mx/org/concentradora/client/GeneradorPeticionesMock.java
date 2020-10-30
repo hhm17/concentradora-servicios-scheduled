@@ -5,7 +5,6 @@ import java.util.Date;
 
 import org.springframework.stereotype.Component;
 
-
 @Component("generadorPeticionesMock")
 public class GeneradorPeticionesMock {
 
@@ -26,10 +25,12 @@ public class GeneradorPeticionesMock {
 		return peticion.toString();
 	}
 
-	public String generarPeticionSolicitudSaldo(String tclave, String caja, String celular, String monto) {
+	public String generarPeticionSolicitudSaldo(String tclave, String caja, String celular, String monto, String accion,
+			String producto) {
 		StringBuilder peticion = new StringBuilder();
+		/*********************** parte fija **********************************/
 		peticion.append("STX");
-		peticion.append("01");
+		peticion.append(accion);
 
 		/** hhm: ID transaccion canal de venta **/
 		peticion.append("3B");
@@ -38,7 +39,9 @@ public class GeneradorPeticionesMock {
 		/** hhm: fecha y hora **/
 		peticion.append(generarCadenaFecha());
 		peticion.append(generarCadenaHora());
+		/***********************************************************************/
 
+		/************************** parte variable *****************************/
 		/** hhm: puede ir en 0 cadena comercial **/
 		peticion.append("3B");
 		peticion.append(rellenarCeros(8, String.valueOf(contador)));
@@ -62,7 +65,13 @@ public class GeneradorPeticionesMock {
 		/** hhm: monto ultimos dos decimales **/
 		peticion.append(rellenarCeros(10, monto));
 
+		/** hhm: producto solo para paquete de datos **/
+		if (producto != null && !producto.isEmpty()) {
+			peticion.append(rellenarCeros(10, producto));
+		}
+
 		peticion.append("ETX");
+		/***********************************************************************/
 		return peticion.toString();
 	}
 

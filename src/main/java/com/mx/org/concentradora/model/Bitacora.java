@@ -22,10 +22,11 @@ public class Bitacora {
 	private Date fechaInicio;
 	private Date fechaActualizacion;
 	private Date fechaFin;
+	private String accion;
 
 	public Bitacora(Long id, String tclave, String caja, int idTurno, int idTicket, int iclave, int pclave, String icb,
 			int estatus, int userId, Double monto, String referencia, String folio, String folioProv, String respProv,
-			Date fechaInicio, Date fechaActualizacion, Date fechaFin) {
+			Date fechaInicio, Date fechaActualizacion, Date fechaFin, String accion) {
 		super();
 		this.id = id;
 		this.tclave = tclave;
@@ -45,6 +46,7 @@ public class Bitacora {
 		this.fechaInicio = fechaInicio;
 		this.fechaActualizacion = fechaActualizacion;
 		this.fechaFin = fechaFin;
+		this.accion = accion;
 	}
 
 	public Bitacora() {
@@ -193,6 +195,14 @@ public class Bitacora {
 
 	public void setFechaFin(Date fechaFin) {
 		this.fechaFin = fechaFin;
+	}
+
+	public String getAccion() {
+		return accion;
+	}
+
+	public void setAccion(String accion) {
+		this.accion = accion;
 	}
 
 }

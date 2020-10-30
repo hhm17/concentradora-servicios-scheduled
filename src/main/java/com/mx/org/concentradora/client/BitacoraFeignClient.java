@@ -17,11 +17,11 @@ public interface BitacoraFeignClient {
 //	public Bitacora findById(@PathVariable Long id);
 
 	@GetMapping("/bitacoras/search/buscar-folio")
-	public Bitacora findByFolio(@RequestParam String folio);
+	public Bitacora findByFolio(@RequestParam(value = "folio") String folio);
 
 	@PostMapping("/bitacoras/")
 	public Bitacora save(@RequestBody Bitacora bitacora);
 	
 	@PutMapping("/bitacoras/{id}")
-	public Bitacora update(@RequestBody Bitacora bitacora, @PathVariable Long id);
+	public Bitacora update(@RequestBody Bitacora bitacora, @PathVariable(value = "id")  Long id);
 }
