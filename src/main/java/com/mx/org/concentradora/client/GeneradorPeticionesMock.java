@@ -31,7 +31,7 @@ public class GeneradorPeticionesMock {
 		peticion.append("STX");
 		peticion.append("01");
 
-		/** hhm: ID transaccion **/
+		/** hhm: ID transaccion canal de venta **/
 		peticion.append("3B");
 		peticion.append(rellenarCeros(6, String.valueOf(contador)));
 
@@ -39,7 +39,7 @@ public class GeneradorPeticionesMock {
 		peticion.append(generarCadenaFecha());
 		peticion.append(generarCadenaHora());
 
-		/** hhm: se debera poner codigo de 3B proporcionado por proveedor (ID) **/
+		/** hhm: puede ir en 0 cadena comercial **/
 		peticion.append("3B");
 		peticion.append(rellenarCeros(8, String.valueOf(contador)));
 
