@@ -1,7 +1,10 @@
 package com.mx.org.concentradora.task;
 
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Date;
+
+import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -10,6 +13,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.mx.org.concentradora.client.BitacoraFeignClient;
+import com.mx.org.concentradora.client.MockSolicitudSaldoClient;
 import com.mx.org.concentradora.client.TransaccionInFeignClient;
 import com.mx.org.concentradora.client.TransaccionOutFeignClient;
 import com.mx.org.concentradora.model.Bitacora;
@@ -25,6 +29,7 @@ public class TransaccionesTask {
 	private Integer TRANSACCION_ENVIADA = 2;
 	private Integer TRANSACCION_RESUELTA = 3;
 	private static int intentosEcho = 0;
+	private boolean inicio = true;
 
 	private Integer BITACORA_TRANSACCION_ENVIADA = 2;
 	private Integer BITACORA_TRANSACCION_PROCESADA = 3;
@@ -42,11 +47,30 @@ public class TransaccionesTask {
 	@Qualifier("taeService")
 	private TaeService taeService;
 
+	@Autowired
+	private MockSolicitudSaldoClient saldo;
+
+	@PostConstruct
+	public void iniciarTask() {
+		abrirConexion();
+	}
+
+	public void abrirConexion() {
+		String ip = null;
+		try {
+			ip = InetAddress.getLocalHost().getHostAddress();
+			saldo.startConnection(ip, 9898);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Scheduled(cron = "*/10 * * ? * *")
 	public void procesarTransacciones() {
 		try {
-			if (intentosEcho == 0) {
+			if (intentosEcho == 0 && inicio) {
 				enviaEcho();
+				inicio = false;
 			}
 			CollectionModel<TransaccionIn> transaccionesNuevas = transaccionInFeignClient
 					.findByEstatus(TRANSACCION_NUEVA);
@@ -87,7 +111,7 @@ public class TransaccionesTask {
 				intentosEcho++;
 			}
 
-			System.out.println("se imprime el contador: " + intentosEcho);
+			System.out.println("Ejecuciones sin transacciones por procesar: " + intentosEcho);
 			if (intentosEcho == 20) {
 				intentosEcho = 0;
 				enviaEcho();
@@ -100,5 +124,9 @@ public class TransaccionesTask {
 	private void enviaEcho() throws UnknownHostException {
 		String[] echo = taeService.enviaEcho();
 		System.out.println("enviando echo: " + echo);
+	}
+
+	public void cerrarConexion() throws UnknownHostException {
+		saldo.stopConnection();
 	}
 }
