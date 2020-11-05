@@ -1,6 +1,5 @@
 package com.mx.org.concentradora.task;
 
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Date;
 
@@ -8,6 +7,7 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.env.Environment;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -50,17 +50,23 @@ public class TransaccionesTask {
 	@Autowired
 	private MockSolicitudSaldoClient saldo;
 
+	@Autowired
+	private Environment env;
+
 	@PostConstruct
 	public void iniciarTask() {
 		abrirConexion();
 	}
 
 	public void abrirConexion() {
-		String ip = null;
+		// String ip = null;
+		String ip = env.getProperty("ip.socket.server");
+		String puerto = env.getProperty("puerto.socket.server");
 		try {
-			ip = InetAddress.getLocalHost().getHostAddress();
-			saldo.startConnection(ip, 9898);
-		} catch (UnknownHostException e) {
+			int nPuerto = Integer.parseInt(puerto);
+			// ip = InetAddress.getLocalHost().getHostAddress();
+			saldo.startConnection(ip, nPuerto);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -94,7 +100,8 @@ public class TransaccionesTask {
 					transaccionOut.setEstatus(TRANSACCION_RESUELTA);
 					transaccionOut.setRespProv(respuestaSocket[0]);
 					transaccionOut.setFolioProv(respuestaSocket[1]);
-					transaccionOut.setCanalVenta(respuestaSocket[2]);
+					transaccionOut.setCanalVenta(env.getProperty("codigo.3b.telcel"));
+					transaccionOut.setLeyendaTck(respuestaSocket[2]);
 					transaccionOut.setFechaResp(new Date());
 
 					transaccionOutFeignClient.update(transaccionOut, transaccionIn.getId());
@@ -112,7 +119,9 @@ public class TransaccionesTask {
 			}
 
 			System.out.println("Ejecuciones sin transacciones por procesar: " + intentosEcho);
-			if (intentosEcho == 20) {
+			String contadorEchos = env.getProperty("numero.contador.echos");
+			int nContadorEchos = Integer.parseInt(contadorEchos);
+			if (intentosEcho == nContadorEchos) {
 				intentosEcho = 0;
 				enviaEcho();
 			}

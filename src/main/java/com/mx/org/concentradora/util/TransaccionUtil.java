@@ -42,7 +42,7 @@ public class TransaccionUtil {
 		transaccionSalida.setFolio(String.valueOf(transaccionEntrada.getId()));
 		return transaccionSalida;
 	}
-	
+
 	public static Bitacora crearBitacora(TransaccionIn transaccionEntrada) {
 		Bitacora bitacora = new Bitacora();
 		bitacora.setCaja(transaccionEntrada.getCaja());
@@ -77,23 +77,12 @@ public class TransaccionUtil {
 		String[] arr = new String[3];
 		arr[1] = respuesta.substring(respuesta.length() - 9, respuesta.length() - 3);
 		arr[0] = respuesta.substring(respuesta.length() - 11, respuesta.length() - 9);
-		arr[2] = rellenarCeros(8, "TEL");
+		arr[2] = respuesta.substring(5, 13);
 		return arr;
 	}
 
 	public static String transformarMontoCadena(double monto) {
 		String montoCadena = String.valueOf(monto).replace(".", "");
 		return montoCadena;
-	}
-
-	private static String rellenarCeros(int ceros, String numeroCadena) {
-		String cadenaCeros = "";
-
-		int numeroCeros = ceros - numeroCadena.length();
-		for (int i = 0; i < numeroCeros; i++) {
-			cadenaCeros += "0";
-		}
-		cadenaCeros += numeroCadena;
-		return cadenaCeros;
 	}
 }

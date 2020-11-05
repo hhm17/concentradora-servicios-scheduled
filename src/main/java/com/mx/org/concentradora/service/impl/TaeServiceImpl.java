@@ -29,7 +29,7 @@ public class TaeServiceImpl implements TaeService {
 
 		String respuetaSocket = saldo.sendMessage(mock.generarPeticionSolicitudSaldo(transaccion.getTclave(),
 				transaccion.getCaja(), transaccion.getReferencia(),
-				TransaccionUtil.transformarMontoCadena(transaccion.getMonto()), accion, transaccion.getProducto()));
+				TransaccionUtil.transformarMontoCadena(transaccion.getMonto()), accion, transaccion.getProducto(), String.valueOf(transaccion.getId())));
 		String[] respuestaProcesada = TransaccionUtil.procesarRespuestaSocket(respuetaSocket);
 		return respuestaProcesada;
 	}
