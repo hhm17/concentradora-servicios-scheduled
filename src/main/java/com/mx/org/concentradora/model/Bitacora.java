@@ -23,10 +23,12 @@ public class Bitacora {
 	private Date fechaActualizacion;
 	private Date fechaFin;
 	private String accion;
+	private int idLog;
+	private String leyendaTck;
 
 	public Bitacora(Long id, String tclave, String caja, int idTurno, int idTicket, int iclave, int pclave, String icb,
 			int estatus, int userId, Double monto, String referencia, String folio, String folioProv, String respProv,
-			Date fechaInicio, Date fechaActualizacion, Date fechaFin, String accion) {
+			Date fechaInicio, Date fechaActualizacion, Date fechaFin, String accion, int idLog, String leyendaTck) {
 		super();
 		this.id = id;
 		this.tclave = tclave;
@@ -47,6 +49,8 @@ public class Bitacora {
 		this.fechaActualizacion = fechaActualizacion;
 		this.fechaFin = fechaFin;
 		this.accion = accion;
+		this.idLog = idLog;
+		this.leyendaTck = leyendaTck;
 	}
 
 	public Bitacora() {
@@ -203,6 +207,22 @@ public class Bitacora {
 
 	public void setAccion(String accion) {
 		this.accion = accion;
+	}
+
+	public int getIdLog() {
+		return idLog;
+	}
+
+	public void setIdLog(int idLog) {
+		this.idLog = idLog;
+	}
+
+	public String getLeyendaTck() {
+		return leyendaTck;
+	}
+
+	public void setLeyendaTck(String leyendaTck) {
+		this.leyendaTck = leyendaTck;
 	}
 
 }

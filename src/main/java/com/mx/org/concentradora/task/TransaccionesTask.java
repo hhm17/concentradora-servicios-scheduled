@@ -59,12 +59,10 @@ public class TransaccionesTask {
 	}
 
 	public void abrirConexion() {
-		// String ip = null;
 		String ip = env.getProperty("ip.socket.server");
 		String puerto = env.getProperty("puerto.socket.server");
 		try {
 			int nPuerto = Integer.parseInt(puerto);
-			// ip = InetAddress.getLocalHost().getHostAddress();
 			saldo.startConnection(ip, nPuerto);
 		} catch (Exception e) {
 			e.printStackTrace();
