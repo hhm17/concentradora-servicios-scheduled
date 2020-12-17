@@ -13,7 +13,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.mx.org.concentradora.client.BitacoraFeignClient;
-import com.mx.org.concentradora.client.MockSolicitudSaldoClient;
+import com.mx.org.concentradora.client.MockSolicitudSaldoTaeClient;
 import com.mx.org.concentradora.client.TransaccionInFeignClient;
 import com.mx.org.concentradora.client.TransaccionOutFeignClient;
 import com.mx.org.concentradora.model.Bitacora;
@@ -50,22 +50,36 @@ public class TransaccionesTask {
 	private TaeService taeService;
 
 	@Autowired
-	private MockSolicitudSaldoClient saldo;
+	private MockSolicitudSaldoTaeClient saldoTae;
+
+	@Autowired
+	private MockSolicitudSaldoTaeClient saldoVs;
 
 	@Autowired
 	private Environment env;
 
 	@PostConstruct
 	public void iniciarTask() {
-		abrirConexion();
+		abrirConexionTae();
 	}
 
-	public void abrirConexion() {
-		String ip = env.getProperty("ip.socket.server");
-		String puerto = env.getProperty("puerto.socket.server");
+	public void abrirConexionTae() {
+		String ip = env.getProperty("ip.socket.server.tae");
+		String puerto = env.getProperty("puerto.socket.server.tae");
 		try {
 			int nPuerto = Integer.parseInt(puerto);
-			saldo.startConnection(ip, nPuerto);
+			saldoTae.startConnection(ip, nPuerto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void abrirConexionVs() {
+		String ip = env.getProperty("ip.socket.server.vs");
+		String puerto = env.getProperty("puerto.socket.server.vs");
+		try {
+			int nPuerto = Integer.parseInt(puerto);
+			saldoVs.startConnection(ip, nPuerto);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -76,7 +90,8 @@ public class TransaccionesTask {
 		if (intentosEcho == 0 && inicio) {
 			try {
 				System.out.println("********** Enviando echo por inicio **************");
-				enviaEcho();
+				enviaEchoTae();
+				enviaEchoVs();
 			} catch (UnknownHostException e) {
 				System.out.println("********** Error en echo por inicio **************");
 				e.printStackTrace();
@@ -171,7 +186,8 @@ public class TransaccionesTask {
 			intentosEcho = 0;
 			try {
 				System.out.println("********** Enviando echo por intentos **************");
-				enviaEcho();
+				enviaEchoTae();
+				enviaEchoVs();
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			}
@@ -262,12 +278,21 @@ public class TransaccionesTask {
 	// }
 	// }
 
-	private void enviaEcho() throws UnknownHostException {
-		String[] echo = taeService.enviaEcho();
-		System.out.println("enviando echo: " + echo);
+	private void enviaEchoTae() throws UnknownHostException {
+		String[] echo = taeService.enviaEchoTae();
+		System.out.println("enviando enviaEchoTae: " + echo);
 	}
 
-	public void cerrarConexion() throws UnknownHostException {
-		saldo.stopConnection();
+	private void enviaEchoVs() throws UnknownHostException {
+		String[] echo = taeService.enviaEchoVs();
+		System.out.println("enviando enviaEchoVs: " + echo);
+	}
+
+	public void cerrarConexionTae() throws UnknownHostException {
+		saldoTae.stopConnection();
+	}
+
+	public void cerrarConexionVs() throws UnknownHostException {
+		saldoVs.stopConnection();
 	}
 }

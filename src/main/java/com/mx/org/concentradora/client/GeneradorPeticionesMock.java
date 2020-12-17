@@ -10,21 +10,31 @@ import org.springframework.stereotype.Component;
 @Component("generadorPeticionesMock")
 public class GeneradorPeticionesMock {
 
-	private static int contadorEcho = 0;
+	private static int contadorEchoTae = 0;
+	private static int contadorEchoVs = 0;
 	private static int contadorTAE = 0;
+	private static int contadorVS = 0;
 	private static Date fechaActual = new Date();
-	
+
 	@Autowired
 	private Environment env;
 
-	public String generarPeticionEcho() {
-		contadorEcho++;
+	public String generarPeticionEcho(boolean isTae) {
+		if (isTae) {
+			contadorEchoTae++;
+		} else {
+			contadorEchoVs++;
+		}
 		StringBuilder peticion = new StringBuilder();
 		peticion.append("STX");
 		peticion.append("98");
 		/** hhm: se debera poner codigo de 3B proporcionado por proveedor **/
 		peticion.append(env.getProperty("codigo.3b.telcel"));
-		peticion.append(rellenarCeros(6, String.valueOf(contadorEcho)));
+		if (isTae) {
+			peticion.append(rellenarCeros(6, String.valueOf(contadorEchoTae)));
+		} else {
+			peticion.append(rellenarCeros(6, String.valueOf(contadorEchoVs)));
+		}
 		peticion.append(generarCadenaFecha());
 		peticion.append(generarCadenaHora());
 		peticion.append("ETX");
@@ -33,7 +43,14 @@ public class GeneradorPeticionesMock {
 
 	public String generarPeticionSolicitudSaldo(String tclave, String caja, String celular, String monto, String accion,
 			String producto, String folio) {
-		contadorTAE ++;
+		boolean isTae = true;
+		/** hhm: producto solo para paquete de datos **/
+		if (isTae) {
+			contadorTAE++;
+		} else {
+			contadorVS++;
+		}
+
 		StringBuilder peticion = new StringBuilder();
 		/*********************** parte fija **********************************/
 		peticion.append("STX");
@@ -41,7 +58,11 @@ public class GeneradorPeticionesMock {
 
 		/** hhm: ID transaccion canal de venta **/
 		peticion.append(env.getProperty("codigo.3b.telcel"));
-		peticion.append(rellenarCeros(6, String.valueOf(contadorTAE)));
+		if (isTae) {
+			peticion.append(rellenarCeros(6, String.valueOf(contadorTAE)));
+		} else {
+			peticion.append(rellenarCeros(6, String.valueOf(contadorVS)));
+		}
 
 		/** hhm: fecha y hora **/
 		peticion.append(generarCadenaFecha());
@@ -61,7 +82,7 @@ public class GeneradorPeticionesMock {
 		/** hhm: fecha y hora **/
 		peticion.append(generarCadenaHora());
 		peticion.append(generarCadenaFecha());
-		
+
 		/** hhm: folio **/
 		peticion.append(rellenarCeros(10, folio));
 
