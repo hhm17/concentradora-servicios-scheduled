@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.mx.org.concentradora.client.BitacoraFeignClient;
 import com.mx.org.concentradora.client.MockSolicitudSaldoTaeClient;
+import com.mx.org.concentradora.client.MockSolicitudSaldoVsClient;
 import com.mx.org.concentradora.client.TransaccionInFeignClient;
 import com.mx.org.concentradora.client.TransaccionOutFeignClient;
 import com.mx.org.concentradora.model.Bitacora;
@@ -53,7 +54,7 @@ public class TransaccionesTask {
 	private MockSolicitudSaldoTaeClient saldoTae;
 
 	@Autowired
-	private MockSolicitudSaldoTaeClient saldoVs;
+	private MockSolicitudSaldoVsClient saldoVs;
 
 	@Autowired
 	private Environment env;
@@ -61,6 +62,7 @@ public class TransaccionesTask {
 	@PostConstruct
 	public void iniciarTask() {
 		abrirConexionTae();
+		abrirConexionVs();
 	}
 
 	public void abrirConexionTae() {
